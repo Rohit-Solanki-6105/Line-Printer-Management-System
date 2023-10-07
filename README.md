@@ -15,7 +15,7 @@ all the selected student files with different name for non-conflict of files
 
 format all the files (adding banner , date, username , etc)
 
-and then print the files (.) in kermit
+and then print the files (*.*) in kermit
 </p>
 
 
