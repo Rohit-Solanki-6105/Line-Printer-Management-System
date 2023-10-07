@@ -8,7 +8,7 @@ a new window will open for selecting students who have given the print folder wi
 ->
 after selection click on print
 every students files in print folder one by one copied and renamed like - UserNameOfStudent_filename.exetention
-and then second student will do as same as above: on and on for the selected student
+and then second student's files will be done as same as above: on and on for the selected student
 
 and the the kermit will have
 all the selected student files with different name for non-conflict of files
