@@ -1,6 +1,7 @@
 import customtkinter as ctk
 import tkinter.messagebox as tkmsgbox
 import json
+from courses_and_subjects import CoursesAndSubjects
 
 class SettingsWindow(ctk.CTkToplevel):
     def __init__(self, master=None):
@@ -11,6 +12,10 @@ class SettingsWindow(ctk.CTkToplevel):
         entry_width = 260 # setting entry width for every entrybox
         
         # functions
+
+        # def open_courses_subjects():
+        #     CoursesAndSubjects_window = CoursesAndSubjects(self)
+
         def save_settings():
         # Save configuration to config file
             settings_data = {
@@ -75,9 +80,13 @@ class SettingsWindow(ctk.CTkToplevel):
         kermit_path_label.grid(row=3, column=0, padx = 10, pady = 5)
         kermit_path_entry.grid(row=3, column=1, padx = 10, pady = 5)
 
+        #courses and subjects
+        course_sub_btn = ctk.CTkButton(central_frame, text="Courses and Subjects", command=CoursesAndSubjects)
+        course_sub_btn.grid(row=4, column = 1, padx = 10, pady = 10)
+
         #save 
         save_btn = ctk.CTkButton(central_frame, text="Save", command=save_settings)
-        save_btn.grid(row=4, column=1, padx = 10, pady = 10)
+        save_btn.grid(row=5, column=1, padx = 10, pady = 10)
 
         # Load existing settings if available
         try:
