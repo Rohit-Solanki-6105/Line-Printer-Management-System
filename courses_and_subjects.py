@@ -1,7 +1,6 @@
 import customtkinter as ctk
 import tkinter.messagebox as tkmsgbox
 
-
 class CoursesAndSubjects(ctk.CTkToplevel):
     def __init__(self, master=None):
         super().__init__(master)
