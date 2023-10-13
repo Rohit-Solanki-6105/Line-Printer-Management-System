@@ -55,8 +55,8 @@ class CoursesAndSubjects(ctk.CTkToplevel):
         save_btn.grid(row=3, column=1, padx = 10, pady = 10)
 
 # test
-root = ctk.CTk()
+# root = ctk.CTk()
 
-app = CoursesAndSubjects(root)
+# app = CoursesAndSubjects(root)
 
-root.mainloop()
+# root.mainloop()
