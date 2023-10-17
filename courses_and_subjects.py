@@ -83,7 +83,7 @@ class CoursesAndSubjects(ctk.CTkToplevel):
 
             # Function to add a new course
         def add_course_func():
-            in_course = ctk.CTkInputDialog(text="Enter Course:", title="Test")
+            in_course = ctk.CTkInputDialog(text="Enter Course:", title="Course")
             # selected_course = course_entry.get()
             selected_course = in_course.get_input()
             add_course(selected_course, self.subjects)
