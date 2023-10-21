@@ -35,66 +35,6 @@ def connect_server():
 def disconnect_server():
     os.system("net use Z: /delete")
 
-# copy all files from user print folder
-def copy_specific_files(source_folder, destination_folder, extensions):
-    # Ensure the source folder exists
-    if not os.path.exists(source_folder):
-        print(f"Source folder '{source_folder}' does not exist.")
-        return
-
-    # Create the destination folder if it doesn't exist
-    if not os.path.exists(destination_folder):
-        os.makedirs(destination_folder)
-
-    # Loop through all files in the source folder
-    for filename in os.listdir(source_folder):
-        source_path = os.path.join(source_folder, filename)
-
-        # Check if it's a file (not a subfolder) and copy it if its extension is in the list of extensions
-        if os.path.isfile(source_path):
-            file_extension = os.path.splitext(filename)[1].lower()
-            if file_extension in extensions:
-                destination_path = os.path.join(destination_folder, filename)
-                shutil.copy2(source_path, destination_path)
-                # print(f"Copied '{source_path}' to '{destination_path}'")
-
-# def copy_to():
-#     try:
-#         if len(user_entry.get()) <= 3:
-#             tkmsgbox.showwarning("User", "Please enter user")
-#             return
-
-#         with open('settings.settings', 'r') as settings_file:
-#             settings_data = json.load(settings_file)
-#             # print(settings_data)
-#             data_path = settings_data['default_data_folder']
-#             kermit_path = settings_data['kermit_path']
-#             source_directory = os.path.join(data_path, user_entry.get(), "print", sub_entry.get())
-#             destination_directory = kermit_path
-
-#             if not os.path.exists(source_directory):
-#                 tkmsgbox.showwarning("Source Directory Error", f"Source directory '{source_directory}' does not exist.")
-#                 return
-
-#             if not os.path.exists(destination_directory):
-#                 tkmsgbox.showwarning("Destination Directory Error", f"Destination directory '{destination_directory}' does not exist.")
-#                 return
-            
-#             # source_folder = "C:/Users/Rohit/Desktop/test_Print/data/mcs2106/print/dbms"
-#             # destination_folder = "C:/Users/Rohit/Desktop/test_Print/kermit"
-#             source_folder = source_directory
-#             destination_folder = destination_directory
-#             allowed_extensions = {'.txt', '.c', '.cpp'}
-#             # print(source_folder, destination_folder, allowed_extensions)
-            
-#             copy_specific_files(source_folder, destination_folder, allowed_extensions)
-#             process_all_files_user(user_entry.get(), destination_folder)
-#             tkmsgbox.showinfo("Copied", "Copied to kermit and print started")
-
-#     except Exception as e:
-#         tkmsgbox.showerror("Error", f"An error occurred while copying files: {str(e)}")
-
-
 # top frame
 top_frame = ctk.CTkFrame(root, fg_color="#ebebeb") # color will transparent to merge with background
 top_frame.pack(anchor=ctk.N, padx = 15, pady = 15, fill = ctk.X)
@@ -125,12 +65,45 @@ ip_entry.grid(row = 0, column = 1, pady = 5, padx = 10)
 # user_entry.grid(row = 1, column = 1, pady = 5, padx = 10)
 
 # course
-courses = ["select course","mcs1", "mcs2", "mcs3", "mca"]
+# courses = ["select course","mcs1", "mcs2", "mcs3", "mca"]
+courses = []
+# sub
+subjects = {
+    # "select course": ["select a course"],
+    # "mcs1": ["fop", ""],
+    # "mcs2": ["ap", "dbms"],
+    # "mcs3": ["oocp", "dbms2"],
+    # "mca": ["s1", "s2"]
+}
+
+def load_data_from_json(file_path):
+            global courses, subjects
+            try:
+                with open(file_path, 'r') as json_file:
+                    data = json.load(json_file)
+                    # print("----data------")
+                    # print(data)
+                    if 'courses' in data and 'subjects' in data:
+                        courses = data['courses']
+                        subjects = data['subjects']
+                    else:
+                        # print("Invalid JSON file format: Missing 'courses' or 'subjects' key.")
+                        tkmsgbox.showerror("File: courses.subjects","Invalid JSON file format: Missing 'courses' or 'subjects' key.")
+            except FileNotFoundError:
+                # print("File not found:", file_path)
+                tkmsgbox.showerror("File not found:","File not found: "+ file_path)
+            except json.JSONDecodeError:
+                # print("Invalid JSON file format.")
+                tkmsgbox.showerror("JSON format","Invalid JSON file format.")
+            except Exception as e:
+                # print("Error loading data from JSON file:", str(e))
+                tkmsgbox.showerror("Error loading data from JSON file:", str(e))
+
+load_data_from_json('courses.subjects')
 
 def main_dropdown_selected(event):
     selected = course_entry.get()
-    sub_entry = ctk.CTkComboBox(central_frame, values=subjects[selected])
-    sub_entry.grid(row = 2, column = 1, pady = 5, padx = 10)
+    sub_entry.configure(values = subjects[selected])
     # tkmsgbox.showinfo("hi", selected)
 
     # selected_main_option = course_entry.get()
@@ -143,16 +116,12 @@ course_entry = ctk.CTkComboBox(central_frame, values=courses, command=main_dropd
 course_label.grid(row = 1, column = 0, pady = 5, padx = 10)
 course_entry.grid(row = 1, column = 1, pady = 5, padx = 10)
 
-# sub
-subjects = {
-    "select course": ["select a course"],
-    "mcs1": ["fop", ""],
-    "mcs2": ["ap", "dbms"],
-    "mcs3": ["oocp", "dbms2"],
-    "mca": ["s1", "s2"]
-}
+
 sub_label = ctk.CTkLabel(central_frame, text="Subject: ")
 sub_label.grid(row = 2, column = 0, pady = 5, padx = 10)
+
+sub_entry = ctk.CTkComboBox(central_frame, values=[""])
+sub_entry.grid(row = 2, column = 1, pady = 5, padx = 10)
 
 # buttons
 btn_frame = ctk.CTkFrame(root, fg_color="#ebebeb")
@@ -164,12 +133,14 @@ connect_btn.grid(row=0, column=0, padx = 15, pady = 15)
 disconnect_btn = ctk.CTkButton(btn_frame, text="Disconnect", command=disconnect_server, width=110)
 disconnect_btn.grid(row=0, column=1, padx = 15, pady = 15)
 
-print_btn = ctk.CTkButton(btn_frame, text="Print", width=80, command=StudentsWindow)
-print_btn.grid(row=0, column=2, padx = 15, pady = 15)
+global data_path
 
-# combobox = ctk.CTkOptionMenu(btn_frame, values = ["hi", "hello"])
-# combobox = ctk.CTkOptionMenu(btn_frame, values=["hi", "hello"])
-# combobox.grid(row = 1, column = 0)
+def student_selection():
+    # print(sub_entry.get(), course_entry.get())
+    StudentsWindow(sub_entry.get(), course_entry.get(), data_path)
+
+print_btn = ctk.CTkButton(btn_frame, text="Print", width=80, command=student_selection)
+print_btn.grid(row=0, column=2, padx = 15, pady = 15)
 
 # inserting ip
 try:
@@ -177,10 +148,10 @@ try:
         settings_data = json.load(settings_file)
         # print(settings_data)
         ip_entry.insert(0, settings_data['default_ip'])
-        data_path = settings_data['default_data_path']
+        data_path = settings_data['default_data_folder']
         kermit_path = settings_data['kermit_path']
 
-        print(data_path, kermit_path)
+        # print(data_path, kermit_path)
 
 except:
     # print("doesn't exist")
