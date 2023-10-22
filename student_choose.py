@@ -42,6 +42,9 @@ class StudentsWindow(ctk.CTkToplevel):
         
         def print_selected():
             get_selected_users()
+            with open('settings.settings', 'r') as settings_file:
+                settings_data = json.load(settings_file)
+                process_all_files_user(settings_data['kermit_path'])
 
         # Add a button to get selected users when clicked
         print_selected_button = ctk.CTkButton(top_frame, text="Print Selected", command=print_selected)
@@ -145,7 +148,6 @@ class StudentsWindow(ctk.CTkToplevel):
                     # print(source_folder, destination_folder, allowed_extensions)
                     
                     copy_specific_files(source_folder, destination_folder, allowed_extensions, user)
-                    process_all_files_user(user, destination_folder)
                     # tkmsgbox.showinfo("Copied", "Copied to kermit and print started")
 
             except Exception as e:
