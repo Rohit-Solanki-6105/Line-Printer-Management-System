@@ -20,6 +20,19 @@ and then print all the files in kermit
 and then all the student who have given the print files can get their printed files at same time
 </p>
 
+## Usage
+copy below and paste in cmd/terminal for download and install
+
+``` cmd
+pip install customtkinter
+git clone https://github.com/Rohit-Solanki-6105/Line-Printer-Management-System.git
+```
+go in the folder <br>
+```python
+python main.py
+```
+
+you will get an error of courses.subject file for first use , to make courses and subjects
 
 ## Team
 
