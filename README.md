@@ -27,7 +27,7 @@ copy below and paste in cmd/terminal for download and install
 pip install customtkinter
 git clone https://github.com/Rohit-Solanki-6105/Line-Printer-Management-System.git
 ```
-go in the folder <br>
+go in the folder and run the main.py <br>
 ```python
 python main.py
 ```
