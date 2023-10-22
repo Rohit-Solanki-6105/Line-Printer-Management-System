@@ -36,3 +36,5 @@ you will get an error of courses.subject file for first use , to make courses an
 
 ## Team
 
+<a target="_blank" href="https://github.com/Rohit-Solanki-6105">Rohit-Solanki-6105</a> <br>
+<a target="_blank" href="https://github.com/Learner2829">Learner2829</a>
