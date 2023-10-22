@@ -4,7 +4,7 @@ import datetime
 import shutil
 import json
 
-def process_all_files_user(username, path):
+def process_all_files_user(path):
     # Use glob.glob to collect files from the specified paths
     txt_files = glob.glob(os.path.join(path, "*.txt"))
     c_files = glob.glob(os.path.join(path, "*.c"))
@@ -14,6 +14,10 @@ def process_all_files_user(username, path):
     all_files = txt_files + c_files + cpp_files
 
     for filename in all_files:
+        username = filename.split('_')[0]
+        username = username.rsplit('\\')[1]
+        print(username)
+        print(filename)
         process_file(filename, username)
         
 
