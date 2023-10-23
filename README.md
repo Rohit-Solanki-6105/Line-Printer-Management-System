@@ -24,6 +24,7 @@ and then all the student who have given the print files can get their printed fi
 copy below and paste in cmd/terminal for download and install
 
 ``` cmd
+pip install tk
 pip install customtkinter
 git clone https://github.com/Rohit-Solanki-6105/Line-Printer-Management-System.git
 ```
