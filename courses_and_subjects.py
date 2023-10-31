@@ -26,7 +26,7 @@ class CoursesAndSubjects(ctk.CTkToplevel):
                 subjects[course_name] = []
                 self.courses.append(course_name)
                 # print(self.courses)
-                tkmsgbox.showinfo("Add Course", self.courses+" Added")
+                tkmsgbox.showinfo("Add Course", f"{self.courses} Added")
             else:
                 tkmsgbox.showinfo("Add Course", "Course already exist")
                 # print("Course already exists!")
@@ -36,7 +36,7 @@ class CoursesAndSubjects(ctk.CTkToplevel):
                 del subjects[course_name]
                 self.courses.remove(course_name)
                 # print(self.courses)
-                tkmsgbox.showinfo("Delete Course", course_name+" deleted")
+                tkmsgbox.showinfo("Delete Course", f"{course_name} deleted")
             else:
                 tkmsgbox.showinfo("Delete Course", "Course not fouond")
                 # print("Course not found!")
@@ -61,7 +61,7 @@ class CoursesAndSubjects(ctk.CTkToplevel):
             if course_name in subjects:
                 if subject_name in subjects[course_name]:
                     subjects[course_name].remove(subject_name)
-                    tkmsgbox.showinfo("Delete Subject", subject_name+" deleted from"+course_name)
+                    tkmsgbox.showinfo("Delete Subject", f"{subject_name} deleted from {course_name}")
                 else:
                     tkmsgbox.showinfo("Delete Subject", "Subject not found in the course!")
                     # print("Subject not found in the course!")
