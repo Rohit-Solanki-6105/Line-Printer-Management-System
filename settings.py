@@ -20,7 +20,7 @@ class SettingsWindow(ctk.CTkToplevel):
         super().__init__(master)
         self.title("Settings")
 
-        self.minsize(300, 200)
+        self.minsize(600, 410)
         entry_width = 260 # setting entry width for every entrybox
         
         # functions
@@ -136,7 +136,7 @@ class SettingsWindow(ctk.CTkToplevel):
             self.show_btn = ctk.CTkButton(self.printer_window, text="ok", command=return_printer)
             self.show_btn.pack(padx=10, pady=10)
 
-        # display_printers()
+            display_printers()
 
         printer_label = ctk.CTkLabel(central_frame, text="Printer: ")
         self.printer_entry = ctk.CTkEntry(central_frame, width=entry_width)
