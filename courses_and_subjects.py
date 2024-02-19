@@ -18,6 +18,7 @@ class CoursesAndSubjects(ctk.CTkToplevel):
             # "select course": ["select a course"],
             # "mcs1": ["fop", ""],
             # "mcs2": ["ap", "dbms"],
+            # "mcs3": ["oocp", "dbms2"],
             # "mca": ["s1", "s2"]
         }
         
@@ -26,7 +27,7 @@ class CoursesAndSubjects(ctk.CTkToplevel):
                 subjects[course_name] = []
                 self.courses.append(course_name)
                 # print(self.courses)
-                tkmsgbox.showinfo("Add Course", f"{self.courses} Added")
+                tkmsgbox.showinfo("Add Course",f" {self.courses} Added")
             else:
                 tkmsgbox.showinfo("Add Course", "Course already exist")
                 # print("Course already exists!")
@@ -83,7 +84,7 @@ class CoursesAndSubjects(ctk.CTkToplevel):
 
             # Function to add a new course
         def add_course_func():
-            in_course = ctk.CTkInputDialog(text="Enter Course:", title="Course")
+            in_course = ctk.CTkInputDialog(text="Enter Course:", title="Test")
             # selected_course = course_entry.get()
             selected_course = in_course.get_input()
             add_course(selected_course, self.subjects)
@@ -109,6 +110,7 @@ class CoursesAndSubjects(ctk.CTkToplevel):
             selected_course = course_entry.get()
             selected_subject = sub_entry.get()
             del_sub(selected_course, selected_subject, self.subjects)
+            print(self.subjects)
             update()
 
         # Function to save data to a JSON file
@@ -121,21 +123,22 @@ class CoursesAndSubjects(ctk.CTkToplevel):
             
             sub_entry = ctk.CTkComboBox(center_frame, values=[""])
             sub_entry.grid(row = 2, column = 1, pady = 5, padx = 10)
+            print(self.courses, self.subjects)
             # main_dropdown_selected()
         
         def main_dropdown_selected(event):
             selected = course_entry.get()
             if selected in self.subjects:
-                sub_entry = ctk.CTkComboBox(center_frame, values=self.subjects[selected])
-                sub_entry.grid(row = 2, column = 1, pady = 5, padx = 10)
+                sub_entry.configure(values=self.subjects[selected])
             else:
-                sub_entry = ctk.CTkComboBox(center_frame, values=[])
-                sub_entry.grid(row = 2, column = 1, pady = 5, padx = 10)
+                sub_entry.configure(values=[""])
 
         def load_data_from_json(file_path):
             try:
                 with open(file_path, 'r') as json_file:
                     data = json.load(json_file)
+                    print("----data------")
+                    print(data)
                     if 'courses' in data and 'subjects' in data:
                         self.courses = data['courses']
                         self.subjects = data['subjects']
@@ -186,3 +189,13 @@ class CoursesAndSubjects(ctk.CTkToplevel):
         #save 
         save_btn = ctk.CTkButton(center_frame, text="Save", command=save_data)
         save_btn.grid(row=3, column=1, padx = 10, pady = 10)
+
+        
+
+        
+# test
+# root = ctk.CTk()
+
+# app = CoursesAndSubjects(root)
+
+# root.mainloop()
