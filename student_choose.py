@@ -6,15 +6,27 @@ import os
 import glob
 import json
 from process_all import *
+from PIL import ImageTk
+from printer_manage import *
+
+selected_students = []
 
 class StudentsWindow(ctk.CTkToplevel):
     def __init__(self, subject, course, data_path, master=None):
         super().__init__(master)
         self.title("Select Students")
-        self.minsize(300, 220)
+        
+        self.iconbitmap()
+        self.iconphoto(False, ImageTk.PhotoImage(file=("logo.ico")))
+        self.minsize(400, 300)
         self.subject = subject
         self.course = course
         self.data_path = data_path
+        # self.printer_status = False
+
+        with open('settings.settings', 'r') as settings_file:
+            settings_data = json.load(settings_file)
+            # self.printer_status = is_printer_online(settings_data['printer'])
 
         students = glob.glob(os.path.join(data_path, f"{self.course}*", "print", self.subject))
         usernames = []
@@ -31,7 +43,7 @@ class StudentsWindow(ctk.CTkToplevel):
         # Set the maximum width for the frame
         max_width = 200  # Adjust this value according to your needs
 
-        top_frame = ctk.CTkFrame(self,fg_color="#ebebeb")
+        top_frame = ctk.CTkFrame(self,fg_color="transparent")
         top_frame.pack(fill=tk.X, padx=10, pady=10)
 
         # Create a checkbox to select/deselect all users
@@ -41,34 +53,48 @@ class StudentsWindow(ctk.CTkToplevel):
         select_all_checkbox.bind("<Button-1>", lambda event: on_select_all_click(select_all_var))
         
         def print_selected():
-            get_selected_users()
-            with open('settings.settings', 'r') as settings_file:
-                settings_data = json.load(settings_file)
-                process_all_files_user(settings_data['kermit_path'])
-
+            if(printer_check()):
+                get_selected_users()
+                with open('settings.settings', 'r') as settings_file:
+                    settings_data = json.load(settings_file)
+                    process_all_files_user(settings_data['kermit_path'])
+            else:
+                tkmsgbox.showinfo("Error","Printer not found! Please check your printer connection.")
+            self.quit()
         # Add a button to get selected users when clicked
         print_selected_button = ctk.CTkButton(top_frame, text="Print Selected", command=print_selected)
         print_selected_button.pack(side=tk.RIGHT, padx=5)
 
         # Create a frame to hold the checkboxes with a maximum width
-        frame = ctk.CTkFrame(self)
-        frame.pack(fill=tk.X, padx=10, pady=10)
+        frame = ctk.CTkScrollableFrame(self)
+        # frame = ctk.CTkFrame(self)
+        frame.pack(fill=ctk.BOTH, padx=10, pady=10)
 
-
+        # l1 = ctk.CTkLabel(frame, text="under test")
+        # l1.grid(row=0, column=0)
+        # l2 = ctk.CTkLabel(frame, text="under test")
+        # l2.grid(row=1, column=1)
         def show_users():
             current_width = 0
+            row_count = 0
+            column_count = 0
             for i, user in enumerate(usernames):
                 var = ctk.IntVar()
                 self.checkbox_vars.append(var)
                 checkbox = ctk.CTkCheckBox(frame, text=user, variable=var)
-                checkbox.pack(side=tk.LEFT, padx=5)
+                # checkbox.pack(side=tk.LEFT)
+                checkbox.grid(row=row_count, column = column_count, padx=3, pady = 3)
+                column_count = column_count+1
                 checkbox.bind("<Button-1>", lambda event, index=i: on_checkbox_click(index))  # Bind checkbox click event
+                if column_count > 2:
+                    column_count = 0
+                    row_count = row_count+1
                 # Update current width based on the width of the checkbox
-                current_width += checkbox.winfo_reqwidth() + 5  # 5 pixels padding
+                # current_width += checkbox.winfo_reqwidth() + 5  # 5 pixels padding
                 # If the current width exceeds the maximum width, start a new line
-                if current_width > max_width:
-                    current_width = 0
-                    checkbox.pack(side=tk.TOP, padx=5)  # Start a new line
+                # if current_width > max_width:
+                #     current_width = 0
+                #     checkbox.pack(side=tk.TOP, padx=5)  # Start a new line
 
         def on_checkbox_click(index):
             if self.checkbox_vars[index].get() == 1:
@@ -89,13 +115,15 @@ class StudentsWindow(ctk.CTkToplevel):
         show_users()
 
         def get_selected_users():
+            global selected_students
             # Function to retrieve selected users with their paths
             for user_data in self.selected_users:
                 username, student_path = user_data
+                # selected_students.append(user_data)
                 print(f"Copying files for user: {username}: {student_path}")
                 copy_to(username, student_path)
             print("All selected users processed.")
-
+            selected_students = self.selected_users
 
         # copy specific files from user print folder
         def copy_specific_files(source_folder, destination_folder, extensions, username):
@@ -152,3 +180,6 @@ class StudentsWindow(ctk.CTkToplevel):
 
             except Exception as e:
                 tkmsgbox.showerror("Error", f"An error occurred while copying files: {str(e)}")
+
+def return_selected_students():
+    return selected_students
