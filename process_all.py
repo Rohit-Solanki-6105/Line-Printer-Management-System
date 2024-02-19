@@ -3,6 +3,26 @@ import glob
 import datetime
 import shutil
 import json
+from printer_manage import *
+
+def print_students():
+    with open('settings.settings', 'r') as settings_file:
+        settings_data = json.load(settings_file)
+                    # print(settings_data)
+        kermit_path = settings_data['kermit_path']
+    
+    use_printer()
+    os.chdir(kermit_path)
+    os.system("print *.*")
+    print(os.getcwd())
+    print(os.listdir())
+    for i in os.listdir():
+        print(i)
+        os.remove(i)
+    # os.remove()
+    release_printer()
+    print(os.listdir())
+
 
 def process_all_files_user(path):
     # Use glob.glob to collect files from the specified paths
@@ -19,7 +39,10 @@ def process_all_files_user(path):
         print(username)
         print(filename)
         process_file(filename, username)
-        
+
+    print_students()
+    
+
 
 def process_file(input_file, username):
     now = datetime.datetime.now()
@@ -28,6 +51,7 @@ def process_file(input_file, username):
         user = user[:10]
 
     with open(input_file, 'r') as infile, open("prt.var", 'w') as outfile:
+        
         page_number = 1
         line_count = 0
         outfile.write(f"                                          DEPARTMENT OF COMPUTER SCIENCE                      Page = {page_number}\n")
@@ -41,9 +65,9 @@ def process_file(input_file, username):
                 return
             if tmp == '\n':
                 line_count += 1
-            if line_count == 69:
+            if line_count >= 69:
                 outfile.write('\n\n')
-                page_number += 1
+                page_number = page_number + 1
                 outfile.write(f"                                           DEPARTMENT OF COMPUTER SCIENCE                        Page = {page_number}\n")
                 outfile.write(f"User = {user:<6}                                                                              Date = {now.day}\\{now.month}\\{now.year}\n")
                 # outfile.write(f"-------------------------------------------------------------------------------------------------------------\n")
@@ -56,4 +80,5 @@ def process_file(input_file, username):
             tmp = infile.read(1)
 
     os.remove(input_file)
-    os.rename("prt.var", input_file)
+    # os.rename("prt.var", input_file)
+    shutil.move("prt.var", input_file)
