@@ -2,18 +2,19 @@ from win32print import *
 
 def_printer = GetDefaultPrinter()
 print(f"default: {def_printer}")
-printer = "none"
-try:
-    with open('settings.settings', 'r') as settings_file:
-        settings_data = json.load(settings_file)
-        # print(settings_data)
-        printer = settings_data['printer']
 
-except:
-    # print("doesn't exist")
-    pass
+def get_printer():
+    try:
+        with open('settings.settings', 'r') as settings_file:
+            settings_data = json.load(settings_file)
+            # print(settings_data)
+            return settings_data['printer']
+
+    except:
+        # print("doesn't exist")
+        pass
 # printer = "EPSON FX Series 1 (136)"
-
+printer = get_printer()
 def get_all_printers():
     printers_info = EnumPrinters(PRINTER_ENUM_LOCAL, None, 1)
     printers = [printer_info[2] for printer_info in printers_info]
